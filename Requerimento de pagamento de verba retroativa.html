@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requerimento de Retroativo - CMC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root { --primary-blue: #004a80; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        .input-card { max-width: 700px; margin: 30px auto; border: none; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card-header { background-color: var(--primary-blue); color: white; border-radius: 12px 12px 0 0 !important; padding: 1.5rem; }
+        
+        /* Estilo do PDF Oculto */
+        #doc-pdf { 
+            display: none; 
+            width: 210mm; padding: 25mm; background: white; 
+            font-family: 'Times New Roman', Times, serif; color: black; line-height: 1.5;
+        }
+        .brasao { width: 120px; display: block; margin: 0 auto 20px; }
+        .justified { text-align: justify; }
+        .field-fill { font-weight: bold; text-decoration: underline; }
+        .sig-line { border-top: 1px solid black; width: 300px; margin: 60px auto 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container no-print">
+    <div class="card input-card">
+        <div class="card-header text-center">
+            <h4 class="mb-0">Requerimento de Retroativo</h4>
+            <small>Lei Municipal nº 16.643/2025</small>
+        </div>
+        <div class="card-body p-4">
+            <form id="formRetroativo">
+                <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Identificação do Requerente</h6>
+                <div class="mb-3">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" id="in_nome" class="form-control" required>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">RG</label>
+                        <input type="text" id="in_rg" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">CPF</label>
+                        <input type="text" id="in_cpf" class="form-control" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Endereço Completo</label>
+                    <input type="text" id="in_endereco" class="form-control" required>
+                </div>
+
+                <h6 class="text-primary fw-bold mb-3 mt-4 border-bottom pb-2">Dados Bancários para Depósito</h6>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Banco</label>
+                        <input type="text" id="in_banco" class="form-control" placeholder="Ex: Banco do Brasil" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Agência</label>
+                        <input type="text" id="in_agencia" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Conta-Corrente</label>
+                        <input type="text" id="in_conta" class="form-control" required>
+                    </div>
+                </div>
+
+                <h6 class="text-primary fw-bold mb-3 mt-4 border-bottom pb-2">Dados de Contato</h6>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" id="in_email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Telefone</label>
+                        <input type="tel" id="in_tel" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="button" onclick="processarTudo()" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                    GERAR REQUERIMENTO E SALVAR DADOS
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="doc-pdf">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Bras%C3%A3o_de_Curitiba.png/1024px-Bras%C3%A3o_de_Curitiba.png" class="brasao">
+    
+    <p class="fw-bold">À Diretoria de Gestão de Pessoas,</p> [cite: 21]
+    
+    <h3 style="text-align: center; font-size: 14pt; margin: 30px 0;">REQUERIMENTO DE PAGAMENTO DE RETROATIVO DE REAJUSTE REMUNERATÓRIO</h3> [cite: 22]
+
+    <p class="justified">
+        Eu, <span id="out_nome" class="field-fill"></span>, RG nº <span id="out_rg" class="field-fill"></span>, 
+        CPF nº <span id="out_cpf" class="field-fill"></span>, residente em <span id="out_endereco" class="field-fill"></span>, 
+        venho requerer o pagamento dos valores retroativos decorrentes do reajuste linear concedido pela Lei Municipal nº 16.643/2025 de Curitiba. [cite: 23, 24, 25]
+    </p>
+
+    <p class="mt-4">Solicito que o pagamento seja depositado na conta corrente (conta de mesma titularidade do requerente):</p> [cite: 26]
+    <p style="margin-left: 20px;">
+        <strong>BANCO:</strong> <span id="out_banco" class="field-fill"></span><br> [cite: 27]
+        <strong>AGÊNCIA:</strong> <span id="out_agencia" class="field-fill"></span><br> [cite: 28]
+        <strong>CONTA-CORRENTE:</strong> <span id="out_conta" class="field-fill"></span> [cite: 29]
+    </p>
+
+    <p class="mt-4"><strong>Dados de contato:</strong></p> [cite: 30]
+    <p style="margin-left: 20px;">
+        <strong>E-MAIL:</strong> <span id="out_email" class="field-fill"></span><br> [cite: 31]
+        <strong>TELEFONE:</strong> <span id="out_tel" class="field-fill"></span> [cite: 32]
+    </p>
+
+    <p style="text-align: right; margin-top: 50px;">Curitiba, <span id="out_hoje"></span>.</p> [cite: 33]
+
+    <div class="sig-line"></div>
+    <p style="text-align: center;">Assinatura do requerente</p> [cite: 34, 35]
+
+    <div style="margin-top: 40px; font-size: 9pt; font-style: italic; color: #555; border: 1px solid #ccc; padding: 10px;">
+        (Obs.: anexar ao presente, cópia do documento de identificação do requerente e cópia do comprovante de endereço atualizado do requerente) 
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBwxzp931qBXmYEespkeNERuefgytTRXfdLUHxXUH7po0SGAYSJCM8LabpRDCpvd_I/exec';
+
+    async function processarTudo() {
+        const form = document.getElementById('formRetroativo');
+        if(!form.checkValidity()) { alert("Por favor, preencha todos os campos."); return; }
+
+        const dados = {
+            nome: document.getElementById('in_nome').value,
+            rg: document.getElementById('in_rg').value,
+            cpf: document.getElementById('in_cpf').value,
+            endereco: document.getElementById('in_endereco').value,
+            banco: document.getElementById('in_banco').value,
+            agencia: document.getElementById('in_agencia').value,
+            conta: document.getElementById('in_conta').value,
+            email: document.getElementById('in_email').value,
+            tel: document.getElementById('in_tel').value
+        };
+
+        // Preenche o PDF
+        document.getElementById('out_nome').innerText = dados.nome;
+        document.getElementById('out_rg').innerText = dados.rg;
+        document.getElementById('out_cpf').innerText = dados.cpf;
+        document.getElementById('out_endereco').innerText = dados.endereco;
+        document.getElementById('out_banco').innerText = dados.banco;
+        document.getElementById('out_agencia').innerText = dados.agencia;
+        document.getElementById('out_conta').innerText = dados.conta;
+        document.getElementById('out_email').innerText = dados.email;
+        document.getElementById('out_tel').innerText = dados.tel;
+        
+        const hoje = new Date();
+        document.getElementById('out_hoje').innerText = `${hoje.getDate()} de ${hoje.toLocaleString('pt-br', {month: 'long'})} de ${hoje.getFullYear()}`;
+
+        try {
+            // Salva na Planilha
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(dados) });
+
+            // Gera o PDF
+            const elemento = document.getElementById('doc-pdf');
+            elemento.style.display = 'block';
+            
+            const opt = {
+                margin: 0,
+                filename: `Requerimento_Retroativo_${dados.nome}.pdf`,
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            await html2pdf().set(opt).from(elemento).save();
+            elemento.style.display = 'none';
+            
+            alert("Sucesso! Requerimento gerado e dados registrados.");
+            form.reset();
+        } catch (e) {
+            alert("Erro no processamento.");
+        }
+    }
+</script>
+</body>
+</html>
